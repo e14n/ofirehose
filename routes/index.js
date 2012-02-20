@@ -1,4 +1,4 @@
-// main function for ofirehose.com
+// routes for ofirehose.com
 //
 // Copyright 2012 StatusNet Inc.
 //
@@ -28,11 +28,19 @@ var distributor = function(activity) {
 };
 
 exports.ping = function(req, res) {
+
     var activity = req.body;
-    var callback = req.params.callback;
 
-    chain.add(distributor(activity), activity.id);
+    req.authenticate(['oauth'], function(error, authenticated) { 
+        if( authenticated ) {
+	    chain.add(distributor(activity), activity.id);
+	    res.writeHead(201);
+	    res.end();
+        } 
+        else {
+            res.writeHead(401, {'Content-Type': 'text/plain'});
+            res.end('Doubt you\'ll ever see this.');
+        }
+    });
 
-    res.writeHead(201);
-    res.end();
 };

@@ -1,9 +1,10 @@
 {
-    "name": "ofirehose"
-  , "version": "0.1.0"
-  , "dependencies": {
-      "express": "2.5.8"
-    , "jade": ">= 0.0.1",
-      "chain-gang": "*"
-  }
+    "name": "ofirehose",
+    "version": "0.1.0",
+    "dependencies": {
+	"express": "2.5.8",
+	"jade": ">= 0.0.1",
+	"connect-auth": "*"
+	"chain-gang": "*"
+    }
 }
