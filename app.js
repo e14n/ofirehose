@@ -14,8 +14,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-var express = require('express')
-  , routes = require('./routes');
+var express = require('express'),
+    routes = require('./routes');
 
 var app = module.exports = express.createServer();
 
@@ -43,5 +43,4 @@ app.configure('production', function(){
 app.get('/', routes.index);
 app.post('/ping', routes.ping);
 
-app.listen(3000);
-console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+app.listen(80);
