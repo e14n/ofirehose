@@ -14,8 +14,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-var theFeed = require('./lib/feed').theFeed,
-    localURL = require('./lib/url').localURL;
+var theFeed = require('../lib/feed').theFeed,
+    localURL = require('../lib/url').localURL;
 
 exports.index = function(req, res) {
     res.render('index', { title: 'Express' });
