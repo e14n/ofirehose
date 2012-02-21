@@ -49,4 +49,5 @@ app.get('/', routes.index);
 app.post('/ping', routes.ping);
 app.post('/feed.json', routes.feed);
 
-app.listen(80, server);
+app.listen(80);
+
