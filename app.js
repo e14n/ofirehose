@@ -15,9 +15,12 @@
 // limitations under the License.
 
 var express = require('express'),
-    auth = require('connect-auth'),
-    Provider = require('./lib/provider').Provider,
-    routes = require('./routes');
+    routes = require('./routes'),
+    server = require('./lib/url').server,
+    config = require('./config'),
+    os = require('os');
+
+server = config.server || os.hostname();
 
 var app = module.exports = express.createServer();
 
@@ -29,10 +32,6 @@ app.configure(function() {
     app.use(express.bodyParser());
     app.use(express.methodOverride());
     app.use(app.router);
-    app.use(auth([auth.Oauth({oauth_provider: new Provider("redis", {}),
-                              authenticate_provider: null,
-                              authorize_provider: null,
-                              authorization_finished_provider: null})]));
     app.use(express.static(__dirname + '/public'));
 });
 
@@ -48,5 +47,6 @@ app.configure('production', function() {
 
 app.get('/', routes.index);
 app.post('/ping', routes.ping);
+app.post('/feed.json', routes.feed);
 
-app.listen(80);
+app.listen(80, server);

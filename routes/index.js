@@ -14,33 +14,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-var cg = require('chain-gang'),
-    chain = cg.create({workers: 3});
+var theFeed = require('./lib/feed').theFeed,
+    localURL = require('./lib/url').localURL;
 
 exports.index = function(req, res) {
     res.render('index', { title: 'Express' });
-};
-
-var distributor = function(activity) {
-    return function(job) {
-	job.finish(null);
-    };
 };
 
 exports.ping = function(req, res) {
 
     var activity = req.body;
 
-    req.authenticate(['oauth'], function(error, authenticated) { 
-        if( authenticated ) {
-	    chain.add(distributor(activity), activity.id);
-	    res.writeHead(201);
-	    res.end();
-        } 
-        else {
-            res.writeHead(401, {'Content-Type': 'text/plain'});
-            res.end('Doubt you\'ll ever see this.');
-        }
-    });
+    theFeed.unshift(activity);
 
+    res.writeHead(201);
+    res.end();
+};
+
+exports.feed = function(req, res) {
+    
+    var collection = {
+        displayName: "OFirehose.com feed",
+        id: localURL('feed.json'),
+        objectTypes: ["activity"],
+        items: theFeed.slice(0, 20)
+    };
+
+    res.writeHead(200, {'Content-Type': 'application/json'});
+    res.end(JSON.stringify(collection));
 };
