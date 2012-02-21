@@ -18,7 +18,7 @@ var theFeed = require('../lib/feed').theFeed,
     localURL = require('../lib/url').localURL;
 
 exports.index = function(req, res) {
-    res.render('index', { title: 'Express' });
+    res.render('index', { title: 'Home' });
 };
 
 exports.ping = function(req, res) {
@@ -42,4 +42,12 @@ exports.feed = function(req, res) {
 
     res.writeHead(200, {'Content-Type': 'application/json'});
     res.end(JSON.stringify(collection));
+};
+
+exports.publish = function(req, res) {
+    res.render('publish', { title: 'Help for publishers' });
+};
+
+exports.subscribe = function(req, res) {
+    res.render('subscribe', { title: 'Help for subscribers' });
 };

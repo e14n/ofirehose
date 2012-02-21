@@ -49,6 +49,9 @@ app.configure('production', function() {
 app.get('/', routes.index);
 app.get('/feed.json', routes.feed);
 
+app.get('/doc/publish', routes.publish);
+app.get('/doc/subscribe', routes.subscribe);
+
 app.post('/ping', routes.ping);
 
 app.listen(80);
