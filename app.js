@@ -19,7 +19,7 @@ var express = require('express'),
     localURL = require('./lib/url').localURL,
     config = require('./config'),
     os = require('os');
-l
+
 ocalURL.server = config.server || os.hostname();
 
 var app = module.exports = express.createServer();
