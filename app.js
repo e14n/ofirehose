@@ -19,8 +19,8 @@ var express = require('express'),
     localURL = require('./lib/url').localURL,
     config = require('./config'),
     os = require('os');
-
-localURL.server = config.server || os.hostname();
+l
+ocalURL.server = config.server || os.hostname();
 
 var app = module.exports = express.createServer();
 
@@ -31,6 +31,7 @@ app.configure(function() {
     app.set('view engine', 'jade');
     app.use(express.bodyParser());
     app.use(express.methodOverride());
+    app.use(express.logger());
     app.use(app.router);
     app.use(express.static(__dirname + '/public'));
 });
