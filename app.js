@@ -16,11 +16,11 @@
 
 var express = require('express'),
     routes = require('./routes'),
-    url = require('./lib/url'),
+    localURL = require('./lib/url').localURL,
     config = require('./config'),
     os = require('os');
 
-url.server = config.server || os.hostname();
+localURL.server = config.server || os.hostname();
 
 var app = module.exports = express.createServer();
 
