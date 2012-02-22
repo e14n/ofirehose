@@ -18,7 +18,11 @@ var express = require('express'),
     routes = require('./routes'),
     localURL = require('./lib/url').localURL,
     config = require('./config'),
-    os = require('os');
+    os = require('os'),
+    Databank = require('databank').Databank,
+    globals = require('./lib/globals'),
+    Hub = require('./lib/hub').Hub,
+    Feed = require('./lib/feed').Feed;
 
 localURL.server = config.server || os.hostname();
 
@@ -54,5 +58,24 @@ app.get('/doc/subscribe', routes.subscribe);
 
 app.post('/ping', routes.ping);
 
-app.listen(80);
+app.post('/hub', routes.hub);
+
+// DB
+
+var driver = config.driver || "disk";
+var params = config.params || {};
+
+params.schema = Hub.schema;
+
+var db = Databank.get(driver, params);
+
+db.connect({}, function(err) {
+    if (err) {
+        console.error("Couldn't connect to JSON store: " + err.message);
+    } else {
+	globals.hub(new Hub(localURL.server, db));
+	globals.feed(new Feed());
+	app.listen(80);
+    }
+});
 

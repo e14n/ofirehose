@@ -14,7 +14,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-var theFeed = require('../lib/feed').theFeed,
+var globals = require('../lib/globals'),
     localURL = require('../lib/url').localURL;
 
 exports.index = function(req, res) {
@@ -23,9 +23,12 @@ exports.index = function(req, res) {
 
 exports.ping = function(req, res) {
 
-    var activity = req.body;
+    var activity = req.body,
+	theFeed = globals.feed(),
+	theHub = globals.hub();
 
     theFeed.unshift(activity);
+    theHub.distribute(activity, localURL('feed.json'), function(err) {});
 
     res.writeHead(201);
     res.end();
@@ -33,8 +36,10 @@ exports.ping = function(req, res) {
 
 exports.feed = function(req, res) {
     
-    var collection = {
+    var theFeed = globals.feed(),
+	collection = {
         displayName: "OFirehose.com feed",
+	hubs: [localURL('hub')],
         id: localURL('feed.json'),
         objectTypes: ["activity"],
         items: theFeed.slice(0, 20)
@@ -50,4 +55,59 @@ exports.publish = function(req, res) {
 
 exports.subscribe = function(req, res) {
     res.render('subscribe', { title: 'Help for subscribers' });
+};
+
+var namespacedParams = function(body) {
+    var params = {}, dotted, dot, namespace, name;
+    
+    for (dotted in body) {
+	dot = dotted.indexOf(".");
+	if (dot !== -1) {
+	    namespace = dotted.substr(0, dot);
+	    name = dotted.substr(dot + 1);
+	} else {
+	    namespace = "__default__";
+	    name = dotted;
+	}
+	if (!params.hasOwnProperty(namespace)) {
+	    params[namespace] = {};
+	}
+	params[namespace][name] = body[dotted];
+    }
+
+    return params;
+};
+
+exports.hub = function(req, res) {
+    var params = namespacedParams(req.body),
+	theHub = globals.hub();
+
+    switch (params.hub.mode) {
+    case 'subscribe':
+	theHub.subscribe(params, function(err, results) {
+	    if (err) {
+		res.writeHead(500, {"Content-Type": "text/plain"});
+		res.end(err.message);
+	    } else {
+		res.writeHead(204);
+		res.end();
+	    }
+	});
+	break;
+    case 'unsubscribe':
+	theHub.unsubscribe(params, function(err, results) {
+	    if (err) {
+		res.writeHead(500, {"Content-Type": "text/plain"});
+		res.end(err.message);
+	    } else {
+		res.writeHead(204);
+		res.end();
+	    }
+	});
+	break;
+    case 'publish':
+    default:
+	res.writeHead(400, {"Content-Type": "text/plain"});
+	res.end("That's not a mode this hub supports.");
+    }
 };
