@@ -24,8 +24,8 @@ exports.index = function(req, res) {
 exports.ping = function(req, res) {
 
     var activity = req.body,
-	theFeed = globals.feed(),
-	theHub = globals.hub();
+        theFeed = globals.feed(),
+        theHub = globals.hub();
 
     theFeed.unshift(activity);
     theHub.distribute(activity, localURL('feed.json'), function(err) {});
@@ -37,15 +37,19 @@ exports.ping = function(req, res) {
 exports.feed = function(req, res) {
     
     var theFeed = globals.feed(),
-	collection = {
-        displayName: "OFirehose.com feed",
-	hubs: [localURL('hub')],
-        id: localURL('feed.json'),
-        objectTypes: ["activity"],
-        items: theFeed.slice(0, 20)
-    };
+        collection = {
+            displayName: "OFirehose.com feed",
+            hubs: [localURL('hub')],
+            id: localURL('feed.json'),
+            objectTypes: ["activity"],
+            items: theFeed.slice(0, 20)
+        };
 
     res.writeHead(200, {'Content-Type': 'application/json'});
+
+    res.setHeader('Link', ['<'+localURL('hub')+'>; rel="hub"',
+                           '<'+localURL('feed.json')+'>; rel="self"']);
+
     res.end(JSON.stringify(collection));
 };
 
@@ -61,18 +65,18 @@ var namespacedParams = function(body) {
     var params = {}, dotted, dot, namespace, name;
     
     for (dotted in body) {
-	dot = dotted.indexOf(".");
-	if (dot !== -1) {
-	    namespace = dotted.substr(0, dot);
-	    name = dotted.substr(dot + 1);
-	} else {
-	    namespace = "__default__";
-	    name = dotted;
-	}
-	if (!params.hasOwnProperty(namespace)) {
-	    params[namespace] = {};
-	}
-	params[namespace][name] = body[dotted];
+        dot = dotted.indexOf(".");
+        if (dot !== -1) {
+            namespace = dotted.substr(0, dot);
+            name = dotted.substr(dot + 1);
+        } else {
+            namespace = "__default__";
+            name = dotted;
+        }
+        if (!params.hasOwnProperty(namespace)) {
+            params[namespace] = {};
+        }
+        params[namespace][name] = body[dotted];
     }
 
     return params;
@@ -80,34 +84,34 @@ var namespacedParams = function(body) {
 
 exports.hub = function(req, res) {
     var params = namespacedParams(req.body),
-	theHub = globals.hub();
+        theHub = globals.hub();
 
     switch (params.hub.mode) {
     case 'subscribe':
-	theHub.subscribe(params, function(err, results) {
-	    if (err) {
-		res.writeHead(500, {"Content-Type": "text/plain"});
-		res.end(err.message);
-	    } else {
-		res.writeHead(204);
-		res.end();
-	    }
-	});
-	break;
+        theHub.subscribe(params, function(err, results) {
+            if (err) {
+                res.writeHead(500, {"Content-Type": "text/plain"});
+                res.end(err.message);
+            } else {
+                res.writeHead(204);
+                res.end();
+            }
+        });
+        break;
     case 'unsubscribe':
-	theHub.unsubscribe(params, function(err, results) {
-	    if (err) {
-		res.writeHead(500, {"Content-Type": "text/plain"});
-		res.end(err.message);
-	    } else {
-		res.writeHead(204);
-		res.end();
-	    }
-	});
-	break;
+        theHub.unsubscribe(params, function(err, results) {
+            if (err) {
+                res.writeHead(500, {"Content-Type": "text/plain"});
+                res.end(err.message);
+            } else {
+                res.writeHead(204);
+                res.end();
+            }
+        });
+        break;
     case 'publish':
     default:
-	res.writeHead(400, {"Content-Type": "text/plain"});
-	res.end("That's not a mode this hub supports.");
+        res.writeHead(400, {"Content-Type": "text/plain"});
+        res.end("That's not a mode this hub supports.");
     }
 };
