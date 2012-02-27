@@ -45,10 +45,10 @@ exports.feed = function(req, res) {
             items: theFeed.slice(0, 20)
         };
 
-    res.writeHead(200, {'Content-Type': 'application/json'});
-
     res.setHeader('Link', ['<'+localURL('hub')+'>; rel="hub"',
                            '<'+localURL('feed.json')+'>; rel="self"']);
+
+    res.writeHead(200, {'Content-Type': 'application/json'});
 
     res.end(JSON.stringify(collection));
 };
