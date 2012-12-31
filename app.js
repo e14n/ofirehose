@@ -24,7 +24,9 @@ var express = require('express'),
     Hub = require('./lib/hub').Hub,
     Feed = require('./lib/feed').Feed;
 
-localURL.server = config.server || os.hostname();
+var server = config.server || os.hostname();
+
+localURL.server = server;
 
 var app = module.exports = express.createServer();
 
@@ -75,7 +77,6 @@ db.connect({}, function(err) {
     } else {
 	globals.hub(new Hub(localURL.server, db));
 	globals.feed(new Feed());
-	app.listen(80);
+	app.listen(80, server);
     }
 });
-
