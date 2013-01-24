@@ -14,7 +14,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-var express = require('express'),
+var fs = require("fs"),
+    express = require('express'),
     routes = require('./routes'),
     localURL = require('./lib/url').localURL,
     config = require('./config'),
@@ -25,10 +26,23 @@ var express = require('express'),
     Feed = require('./lib/feed').Feed;
 
 var server = config.server || os.hostname();
+var useHTTPS = (config.key) ? true : false;
+var app, bounce;
 
 localURL.server = server;
 
-var app = module.exports = express.createServer();
+if (useHTTPS) {
+    app = express.createServer();
+} else {
+    app = express.createServer({key: fs.readFileSync(config.key),
+                                cert: fs.readFileSync(config.cert)});
+    bounce = express.createServer(function(req, res, next) {
+        var host = req.header('Host');
+        res.redirect('https://'+host+req.url, 301);
+    });
+}
+
+module.exports = app;
 
 // Configuration
 
@@ -75,8 +89,13 @@ db.connect({}, function(err) {
     if (err) {
         console.error("Couldn't connect to JSON store: " + err.message);
     } else {
-	globals.hub(new Hub(localURL.server, db));
-	globals.feed(new Feed());
-	app.listen(80, server);
+        globals.hub(new Hub(localURL.server, db));
+        globals.feed(new Feed());
+        if (useHTTPS) {
+            app.listen(443, server);
+            bounce.listen(80, server);
+        } else {
+            app.listen(80, server);
+        }
     }
 });
