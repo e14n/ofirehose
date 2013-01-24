@@ -26,6 +26,7 @@ var fs = require("fs"),
     Feed = require('./lib/feed').Feed;
 
 var server = config.server || os.hostname();
+var address = config.address || server;
 var useHTTPS = (config.key) ? true : false;
 var app, bounce;
 
@@ -92,10 +93,10 @@ db.connect({}, function(err) {
         globals.hub(new Hub(localURL.server, db));
         globals.feed(new Feed());
         if (useHTTPS) {
-            app.listen(443, server);
-            bounce.listen(80, server);
+            app.listen(443, address);
+            bounce.listen(80, address);
         } else {
-            app.listen(80, server);
+            app.listen(80, address);
         }
     }
 });
