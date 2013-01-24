@@ -32,14 +32,14 @@ var app, bounce;
 localURL.server = server;
 
 if (useHTTPS) {
-    app = express.createServer();
-} else {
     app = express.createServer({key: fs.readFileSync(config.key),
                                 cert: fs.readFileSync(config.cert)});
     bounce = express.createServer(function(req, res, next) {
         var host = req.header('Host');
         res.redirect('https://'+host+req.url, 301);
     });
+} else {
+    app = express.createServer();
 }
 
 module.exports = app;
