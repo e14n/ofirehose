@@ -2,7 +2,7 @@
 
 <p>You can use the OFirehose.com firehose to get a window into the open social web.</p>
 
-<p>The main feed is at <a href="http://ofirehose.com/feed.json">http://ofirehose.com/feed.json</a>.</p>
+<p>The main feed is at <a href="https://ofirehose.com/feed.json">https://ofirehose.com/feed.json</a>.</p>
 
 <p>The feed is <a href="http://code.google.com/p/pubsubhubbub/">PubSubHubbub</a>-enabled. To
 follow new stuff on the feed, use the <a href="http://specs.mart.me.uk/pubsubhubbub-json">PubSubHubbub for JSON</a> mechanism.</p>

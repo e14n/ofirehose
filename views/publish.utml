@@ -1,7 +1,7 @@
 <h1>OFirehose for publishers</h1>
 
 <p>To publish data to the firehose, POST new notices to <a
-href="http://ofirehose.com/ping">http://ofirehose.com/ping</a>.</p>
+href="https://ofirehose.com/ping">https://ofirehose.com/ping</a>.</p>
 
 <p>Contents should have Content-Type: application/json and be
 formatted according to <a
