@@ -31,6 +31,7 @@ var useHTTPS = (config.key) ? true : false;
 var app, bounce;
 
 localURL.server = server;
+localURL.protocol = (useHTTPS) ? "https" : "http";
 
 if (useHTTPS) {
     app = express.createServer({key: fs.readFileSync(config.key),
