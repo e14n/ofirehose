@@ -100,7 +100,8 @@ app.post "/hub", routes.hub
 driver = config.driver
 params = config.params
 params.schema = Hub.schema
-db = Databank.get(driver, params)
+db = Databank.get driver, params
+
 db.connect {}, (err) ->
   if err
     console.error "Couldn't connect to JSON store: " + err.message
