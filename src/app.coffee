@@ -13,23 +13,49 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-fs = require("fs")
-express = require("express")
-routes = require("./routes")
-localURL = require("./url").localURL
-config = require("./config")
-os = require("os")
+ 
+fs = require "fs"
+os = require "os"
+path = require "path"
+
+_ = require "underscore"
+express = require "express"
 Databank = require("databank").Databank
-globals = require("./globals")
+
+routes = require "./routes"
+localURL = require("./url").localURL
+globals = require "./globals"
 Hub = require("./hub").Hub
 Feed = require("./feed").Feed
-server = config.server or os.hostname()
+
+CONFIG_FILE = "/etc/ofirehose.json"
+
+defaults =
+  key: null
+  cert: null
+  server: os.hostname()
+  driver: "memory"
+  params: {}
+  address: null
+  
+if fs.existsSync(CONFIG_FILE)
+  try
+    config = JSON.parse(fs.readFileSync(CONFIG_FILE))
+  catch err
+    console.error err
+    process.exit 1
+else
+  config = {}
+
+config = _.defaults config, defaults
+  
+server = config.server
 address = config.address or server
 useHTTPS = (if (config.key) then true else false)
-app = undefined
-bounce = undefined
+
 localURL.server = server
 localURL.protocol = (if (useHTTPS) then "https" else "http")
+
 if useHTTPS
   app = express.createServer(
     key: fs.readFileSync(config.key)
@@ -41,17 +67,18 @@ if useHTTPS
   )
 else
   app = express.createServer()
+  
 module.exports = app
 
 # Configuration
 app.configure ->
-  app.set "views", __dirname + "/views"
+  app.set "views", path.join __dirname, "..", "views"
   app.set "view engine", "utml"
   app.use express.bodyParser()
   app.use express.methodOverride()
   app.use express.logger()
   app.use app.router
-  app.use express.static(__dirname + "/public")
+  app.use express.static path.join __dirname, "..", "public"
 
 app.configure "development", ->
   app.use express.errorHandler(
@@ -61,7 +88,6 @@ app.configure "development", ->
 
 app.configure "production", ->
   app.use express.errorHandler()
-
 
 # Routes
 app.get "/", routes.index
@@ -87,4 +113,3 @@ db.connect {}, (err) ->
       bounce.listen 80, address
     else
       app.listen 80, address
-
