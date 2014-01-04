@@ -27,15 +27,16 @@ Hub = (server, db) ->
   @server = server
   @db = db
 
-Hub.schema = subscription:
-  pkey: "callback"
-  fields: [
-    "callback"
-    "created"
-    "topic"
-    "lease_seconds"
-  ]
-  indices: ["topic"]
+Hub.schema =
+  subscription:
+    pkey: "callback"
+    fields: [
+      "callback"
+      "created"
+      "topic"
+      "lease_seconds"
+    ]
+    indices: ["topic"]
 
 Hub::ourTopic = (topic) ->
   parts = url.parse(topic)
