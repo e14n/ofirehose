@@ -24,7 +24,7 @@ Databank = require("databank").Databank
 
 routes = require "./routes"
 localURL = require("./url").localURL
-Hub = require("./hub").Hub
+Hub = require "./hub"
 Feed = require("./feed").Feed
 
 CONFIG_FILE = "/etc/ofirehose.json"
