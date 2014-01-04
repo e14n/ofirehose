@@ -16,13 +16,13 @@
 fs = require("fs")
 express = require("express")
 routes = require("./routes")
-localURL = require("./lib/url").localURL
+localURL = require("./url").localURL
 config = require("./config")
 os = require("os")
 Databank = require("databank").Databank
-globals = require("./lib/globals")
-Hub = require("./lib/hub").Hub
-Feed = require("./lib/feed").Feed
+globals = require("./globals")
+Hub = require("./hub").Hub
+Feed = require("./feed").Feed
 server = config.server or os.hostname()
 address = config.address or server
 useHTTPS = (if (config.key) then true else false)
