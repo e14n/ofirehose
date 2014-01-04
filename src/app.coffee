@@ -24,7 +24,6 @@ Databank = require("databank").Databank
 
 routes = require "./routes"
 localURL = require("./url").localURL
-globals = require "./globals"
 Hub = require("./hub").Hub
 Feed = require("./feed").Feed
 
@@ -106,8 +105,8 @@ db.connect {}, (err) ->
   if err
     console.error "Couldn't connect to JSON store: " + err.message
   else
-    globals.hub new Hub(localURL.server, db)
-    globals.feed new Feed()
+    app.hub = new Hub(localURL.server, db)
+    app.feed = new Feed()
     if useHTTPS
       app.listen 443, address
       bounce.listen 80, address

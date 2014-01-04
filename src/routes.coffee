@@ -13,17 +13,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-globals = require("./globals")
+ 
 localURL = require("./url").localURL
+
 exports.index = (req, res) ->
   res.render "index",
     title: "Home"
 
-
 exports.ping = (req, res) ->
   activity = req.body
-  theFeed = globals.feed()
-  theHub = globals.hub()
+  theFeed = req.app.feed
+  theHub = req.app.hub
   theFeed.unshift activity
   theHub.distribute activity, localURL("feed.json"), (err) ->
 
@@ -31,7 +31,7 @@ exports.ping = (req, res) ->
   res.end()
 
 exports.feed = (req, res) ->
-  theFeed = globals.feed()
+  theFeed = req.app.feed
   collection =
     displayName: "OFirehose.com feed"
     hubs: [localURL("hub")]
@@ -57,7 +57,6 @@ exports.subscribe = (req, res) ->
   res.render "subscribe",
     title: "Help for subscribers"
 
-
 namespacedParams = (body) ->
   params = {}
   dotted = undefined
@@ -78,7 +77,7 @@ namespacedParams = (body) ->
 
 exports.hub = (req, res) ->
   params = namespacedParams(req.body)
-  theHub = globals.hub()
+  theHub = req.app.hub
   switch params.hub.mode
     when "subscribe"
       theHub.subscribe params, (err, results) ->
