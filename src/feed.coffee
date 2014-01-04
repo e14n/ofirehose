@@ -13,16 +13,20 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-Feed = ->
-  @_items = []
+ 
+class Feed
+  
+  MAX = 20
 
-MAX = 20
-Feed::unshift = (value) ->
-  result = @_items.unshift(value)
-  @_items.splice MAX, @_items.length - MAX  if @_items.length > MAX
-  @_items.length
+  constructor: ->
+    @items = []
 
-Feed::slice = (begin, end) ->
-  @_items.slice begin, end
+  unshift: (value) ->
+    result = @items.unshift(value)
+    @items.splice MAX, @items.length - MAX  if @items.length > MAX
+    @items.length
+
+  slice: (begin, end) ->
+    @items.slice begin, end
 
 exports.Feed = Feed
