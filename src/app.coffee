@@ -97,8 +97,8 @@ app.post "/ping", routes.ping
 app.post "/hub", routes.hub
 
 # DB
-driver = config.driver or "disk"
-params = config.params or {}
+driver = config.driver
+params = config.params
 params.schema = Hub.schema
 db = Databank.get(driver, params)
 db.connect {}, (err) ->
