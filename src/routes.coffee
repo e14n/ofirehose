@@ -26,7 +26,10 @@ exports.ping = (req, res) ->
   theHub = req.app.hub
   theFeed.unshift activity
   theHub.distribute activity, localURL("feed.json"), (err) ->
-
+    if err
+      console.error err
+    else
+      console.dir {message: "distributed", activity: activity.id}
   res.writeHead 201
   res.end()
 
@@ -43,6 +46,7 @@ exports.feed = (req, res) ->
     "<" + localURL("hub") + ">; rel=\"hub\""
     "<" + localURL("feed.json") + ">; rel=\"self\""
   ]
+  
   res.writeHead 200,
     "Content-Type": "application/json"
 
@@ -51,7 +55,6 @@ exports.feed = (req, res) ->
 exports.publish = (req, res) ->
   res.render "publish",
     title: "Help for publishers"
-
 
 exports.subscribe = (req, res) ->
   res.render "subscribe",
@@ -71,7 +74,7 @@ namespacedParams = (body) ->
     else
       namespace = "__default__"
       name = dotted
-    params[namespace] = {}  unless params.hasOwnProperty(namespace)
+    params[namespace] = {} unless params.hasOwnProperty(namespace)
     params[namespace][name] = body[dotted]
   params
 
