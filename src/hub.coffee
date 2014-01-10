@@ -167,16 +167,16 @@ class Hub
     creq.write qs.stringify(params)
     creq.end()
 
-# XXX: queue and do later
+  # XXX: queue and do later
+ 
   distribute: (activity, topic, callback) ->
+    
     hub = this
     message = @makeMessage(activity, topic)
     onSub = (sub) ->
       hub.distributeTo message, topic, sub
 
-    hub.db.search "subscription",
-      topic: topic
-    , onSub, (err) ->
+    hub.db.search "subscription", {topic: topic}, onSub, (err) ->
       callback err
 
   makeMessage: (activity, topic) ->
@@ -188,7 +188,7 @@ class Hub
 
   distributeTo: (message, topic, sub) ->
     signature = null
-    signature = @sign(message, sub.secret)  if sub.secret
+    signature = @sign(message, sub.secret) if sub.secret
     @postMessage sub.callback, message, signature, (err, res, body) ->
 
   # XXX: log
