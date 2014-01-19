@@ -87,7 +87,6 @@ exports.hub = (req, res) ->
         if err
           res.writeHead 500,
             "Content-Type": "text/plain"
-
           res.end err.message
         else
           res.writeHead 204
