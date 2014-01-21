@@ -17,6 +17,7 @@
 url = require "url"
 qs = require "querystring"
 http = require "http"
+https = require "https"
 crypto = require "crypto"
 
 _ = require "underscore"
@@ -152,7 +153,9 @@ class Hub
         "content-type": "application/x-www-form-urlencoded"
         "user-agent": "ofirehose/0.2.0dev"
 
-    creq = http.request(options, (res) ->
+    mod = if parts.protocol == "https:" then https else http
+    
+    creq = mod.request(options, (res) ->
       body = ""
       res.on "data", (chunk) ->
         body = body + chunk
@@ -209,7 +212,10 @@ class Hub
         "user-agent": "ofirehose/0.1.0dev"
 
     options.headers["X-Hub-Signature"] = "sha1=" + signature  if signature
-    creq = http.request(options, (res) ->
+
+    mod = if parts.protocol == "https:" then https else http
+    
+    creq = mod.request(options, (res) ->
       body = ""
       res.on "data", (chunk) ->
         body = body + chunk
