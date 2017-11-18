@@ -39,6 +39,7 @@ defaults =
   driver: "memory"
   params: {}
   address: null
+  port: null
 
 if process.env.HOME
   CONFIG_FILES.push path.join process.env.HOME, ".ofirehose.json"
