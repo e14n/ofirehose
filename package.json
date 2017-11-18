@@ -2,14 +2,14 @@
     "name": "ofirehose",
     "version": "0.2.0-alpha.1",
     "dependencies": {
-	"express": "2.5.x",
-	"underscore": "1.4.x",
-	"utml": "0.2.x",
-	"databank": "0.18.x"
+        "express": "2.5.x",
+        "underscore": "1.4.x",
+        "utml": "0.2.x",
+        "databank": "0.18.x"
     },
     "scripts": {
         "pretest": "coffee -c test/*-test.coffee && coffee -o lib/ -c src/*.coffee",
-        "test": "vows --spec -i test/*-test.js",
+        "test": "perjury test/*-test.js",
         "posttest": "rm -f test/*-test.js lib/*.js",
         "build": "coffee -b -c -o lib/ src/*.coffee",
         "prepublish": "mkdir -p lib/ && coffee -b -c -o lib/ src/*.coffee",
@@ -17,7 +17,7 @@
         "clean": "rm -f lib/*.js test/*-test.js *~ lib/*~ src/*~ test/*~"
     },
     "devDependencies": {
-        "vows": "0.7.x",
-        "coffee-script": "1.6.x"
+        "coffee-script": "1.6.x",
+        "perjury": "^1.1.0"
     }
 }
