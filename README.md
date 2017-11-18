@@ -9,7 +9,7 @@ Firehose for the federated social web
 You'll need four things to get started:
 
 * node.js 4.x or higher
-* npm 1.1.0 or higher
+* npm 2.15.x or higher (4.x or above preferred)
 
 ### Local install
 
@@ -24,7 +24,7 @@ And install the dependencies using `npm`:
 
 ### Database setup
 
-OFirehose uses [databank][databank] Any databank driver should work. 
+OFirehose uses [databank][] Any databank driver should work. 
 `couchbase`, `mongodb` and `redis` are probably the best
 bets for production servers, but the `disk` or even `memory` drivers
 can work for testing.
@@ -51,7 +51,7 @@ OFirehose require a configuration file located in `/etc/ofirehose.json`, `~/.ofi
 
 ### Available parameters
 
-* **driver** The [databank][databank] driver you're using. Defaults to `memory`, not recommended for production.
+* **driver** The [databank][] driver you're using. Defaults to `memory`, not recommended for production.
 * **params** Databank driver params; see the databank driver README for details on what to put here.
 * **key** If you're using SSL, the path to the server key, like
    "/etc/ssl/private/myserver.key". Defaults `null`.
@@ -62,7 +62,10 @@ OFirehose require a configuration file located in `/etc/ofirehose.json`, `~/.ofi
    
 ## License
 
-OFirehose is licensed under the Apache License Version 2.0, See the [LICENSE][LICENSE] file for the full license text.
+Copyright 2012-2014 E14N https://e14n.com/
+Copyright 2017 AJ Jordan <alex@strugee.net>, Camilo QS <vxcamiloxv@disroot.org>
+
+OFirehose is licensed under the Apache License Version 2.0, See the [LICENSE][] file for the full license text.
 
 [databank]: https://github.com/evanp/databank
 [LICENSE]: https://github.com/e14n/ofirehose/blob/master/LICENSE
