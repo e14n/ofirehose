@@ -35,7 +35,7 @@ defaults =
   server: os.hostname()
   driver: "memory"
   params: {}
-  address: null
+  address: null,
   
 if fs.existsSync(CONFIG_FILE)
   try
@@ -51,6 +51,8 @@ config = _.defaults config, defaults
 server = config.server
 address = config.address or server
 useHTTPS = (if (config.key) then true else false)
+if not config.port
+  port = if useHTTPS then 443 else 80
 
 localURL.server = server
 localURL.protocol = (if (useHTTPS) then "https" else "http")
@@ -109,7 +111,7 @@ db.connect {}, (err) ->
     app.hub = new Hub(localURL.server, db)
     app.feed = new Feed()
     if useHTTPS
-      app.listen 443, address
+      app.listen config.port, address
       bounce.listen 80, address
     else
-      app.listen 80, address
+      app.listen config.port, address
