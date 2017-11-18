@@ -9,7 +9,7 @@
     },
     "scripts": {
         "pretest": "coffee -o lib/ -c src/*.coffee",
-        "test": "perjury test/*-test.js",
+        "test": "nyc -r lcov perjury test/*-test.js",
         "posttest": "rm -f lib/*.js",
         "build": "coffee -b -c -o lib/ src/*.coffee",
         "prepublish": "mkdir -p lib/ && coffee -b -c -o lib/ src/*.coffee",
@@ -18,6 +18,8 @@
     },
     "devDependencies": {
         "coffee-script": "1.6.x",
+        "coveralls": "^3.0.0",
+        "nyc": "^11.3.0",
         "perjury": "^1.1.0"
     }
 }
