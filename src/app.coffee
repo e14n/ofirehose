@@ -28,10 +28,10 @@ Hub = require "./hub"
 Feed = require("./feed").Feed
 
 CONFIG_FILES =  [
-  "/etc/ofirehose.json",
-  path.join __dirname, "../ofirehose.json"
+  "/etc/ofirehose.json"
 ]
 
+config = {}
 defaults =
   key: null
   cert: null
@@ -45,10 +45,11 @@ if process.env.HOME
   CONFIG_FILES.push path.join process.env.HOME, ".ofirehose.json"
 
 getConfig = (file) ->
-  if fs.existsSync(file)
-    try
-      config = JSON.parse(fs.readFileSync(file))
-    catch err
+  try
+    raw = fs.readFileSync(file)
+    config = JSON.parse(raw)
+  catch err
+    if err.code != "ENOENT"
       console.error "Error parsing JSON file #{file} : #{err.message}"
       process.exit 1
 

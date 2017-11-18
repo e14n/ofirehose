@@ -59,4 +59,3 @@ typings/
 
 # CoffeeScript build files
 lib/*.js
-ofirehose.json
