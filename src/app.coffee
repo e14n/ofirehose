@@ -49,8 +49,7 @@ getConfig = (file) ->
     try
       config = JSON.parse(fs.readFileSync(file))
     catch err
-      console.error new Error "Error parse JSON file"
-      console.error err
+      console.error "Error parsing JSON file #{file} : #{err.message}"
       process.exit 1
 
 getConfig file for file in CONFIG_FILES
