@@ -47,7 +47,7 @@ example in Debian derivatives:
 
 ## Configuration
 
-OFirehose require a configuration file located in `/etc/ofirehose.json`, `~/.ofirehose.json`, any of the two options would be fine.
+OFirehose require a configuration file located in `/etc/ofirehose.json` or `~/.ofirehose.json`, any of the two options would be fine.
 
 ### Available parameters
 
@@ -58,7 +58,7 @@ OFirehose require a configuration file located in `/etc/ofirehose.json`, `~/.ofi
 * **cert** If you're using SSL, the path to the server cert, like
    "/etc/ssl/private/myserver.crt". Defaults `null`.
 * **server** The address on which "publish/subscribe"(`PubSubHubbub`) will happen. Defaults machine `hostname`.
-* **address** The address to listen on. Defaults machine `hostname`, Use this if you've got some kind of load-balancer or NAS or whatever and your local IP doesn't map to the IP of the hostname.
+* **address** The address to listen on. Defaults the same value of `server` option, Use this if you've got some kind of load-balancer or NAS or whatever and your local IP doesn't map to the IP of the hostname.
 * **port** Port to listen on. Defaults to `443` when *key* is set or `80` otherwise, Change this if you've got some kind of load-balancer.
    
 ## License
