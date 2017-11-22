@@ -64,6 +64,7 @@ OFirehose require a configuration file located in `/etc/ofirehose.json` or `~/.o
 ## License
 
 Copyright 2012-2014 E14N https://e14n.com/
+
 Copyright 2017 AJ Jordan <alex@strugee.net>, Camilo QS <vxcamiloxv@disroot.org>
 
 OFirehose is licensed under the Apache License Version 2.0. See the [LICENSE][] file for the full license text.
