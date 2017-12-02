@@ -29,6 +29,39 @@ vows.describe("URL module").addBatch({
 		},
 		"it exports a function": function(err, localURL) {
 			assert.isFunction(localURL.localURL);
+		},
+		"and we call localURL()": {
+			topic: function(localURL) {
+				return localURL.localURL("hub");
+			},
+			"it works": function(err) {
+				assert.ifError(err);
+			},
+			"we get back the right result": function(err, url) {
+				assert.isString(url);
+				assert.equal(url, "http://localhost/hub");
+			}
+		},
+		"and we configure localURL with some different parameters": {
+			topic: function(localURL) {
+				localURL.localURL.server = "firehose.example";
+				return localURL;
+			},
+			"it works": function(err) {
+				assert.ifError(err);
+			},
+			"and we call localURL()": {
+				topic: function(localURL) {
+					return localURL.localURL("hub");
+				},
+				"it works": function(err) {
+					assert.ifError(err);
+				},
+				"we get back the right result": function(err, url) {
+					assert.isString(url);
+					assert.equal(url, "http://firehose.example/hub");
+				}
+			}
 		}
 	}
 }).export(module);
