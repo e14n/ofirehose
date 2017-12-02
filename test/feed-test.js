@@ -39,6 +39,65 @@ vows.describe("Feed module").addBatch({
 			},
 			"it's an object": function(err, feed) {
 				assert.isObject(feed);
+			},
+			"it has the right methods": function(err, feed) {
+				assert.isFunction(feed.unshift);
+				assert.isFunction(feed.slice);
+			},
+			"feed.items is an array": function(err, feed) {
+				assert.isArray(feed.items);
+			},
+			"and we call unshift() a couple times": {
+				topic: function(feed) {
+					feed.unshift("1");
+					feed.unshift("2");
+					feed.unshift("3");
+					feed.unshift("4");
+					var retval = feed.unshift("5");
+					return [feed, retval];
+				},
+				"it works": function(err) {
+					assert.ifError(err);
+				},
+				"the return value is the right length": function(err, arr) {
+					assert.isNumber(arr[1]);
+					assert.equal(arr[1], 5);
+				},
+				"and we call slice()": {
+					topic: function(arr) {
+						return arr[0].slice(2, 4);
+					},
+					"it works": function(err) {
+						assert.ifError(err);
+					},
+					"it returns the right data": function(err, arr) {
+						assert.deepEqual(arr, ["3", "2"]);
+					}
+				},
+				"and we call unshift() a bunch more times": {
+					topic: function(arr) {
+						var retval, feed = arr[0];
+						for (var i = 6; i <= 100; i++) {
+							retval = feed.unshift(String(i));
+						}
+						return [feed, retval];
+					},
+					"it works": function(err) {
+						assert.ifError(err);
+					},
+					"the return value is the length MAX": function(err, arr) {
+						assert.isNumber(arr[1]);
+						assert.equal(arr[1], 20);
+					},
+					"it returns the last MAX feed entries": function(err, arr) {
+						var newArr = [];
+						for (var i = 81; i <= 100; i++) {
+							newArr.unshift(String(i));
+						}
+
+						assert.deepEqual(arr[0].items, newArr);
+					}
+				}
 			}
 		}
 	}
