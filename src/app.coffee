@@ -51,7 +51,7 @@ getConfig = (file) ->
   catch err
     if err.code != "ENOENT"
       console.error "Error parsing JSON file #{file}: #{err.message}"
-        process.exit 1
+      process.exit 1
 
 getConfig file for file in CONFIG_FILES
 
