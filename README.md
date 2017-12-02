@@ -47,7 +47,7 @@ For example, in Debian derivatives:
 
 ## Configuration
 
-OFirehose require a configuration file located in `/etc/ofirehose.json` or `~/.ofirehose.json`, either of the two options are fine.
+OFirehose requires a configuration file located in `/etc/ofirehose.json` or `~/.ofirehose.json`; either of the two options are fine.
 
 ### Available parameters
 
