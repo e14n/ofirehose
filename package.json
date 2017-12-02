@@ -12,7 +12,9 @@
         "test": "nyc -r lcov perjury test/*-test.js",
         "posttest": "rm -f lib/*.js",
         "build": "coffee -b -c -o lib/ src/*.coffee",
-        "prepublish": "mkdir -p lib/ && coffee -b -c -o lib/ src/*.coffee",
+        "start": "node ./lib/app.js",
+        "watch": "watch 'npm run build' ./src/",
+        "prepublish": "mkdir -p lib/ && npm run build",
         "postpublish": "rm lib/*.js",
         "clean": "rm -f lib/*.js *~ lib/*~ src/*~ test/*~"
     },
@@ -20,6 +22,7 @@
         "coffee-script": "1.6.x",
         "coveralls": "^3.0.0",
         "nyc": "^11.3.0",
-        "perjury": "^1.1.0"
+        "perjury": "^1.1.0",
+        "watch": "^1.0.2"
     }
 }

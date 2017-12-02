@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
- 
+
 fs = require "fs"
 os = require "os"
 path = require "path"
@@ -27,27 +27,36 @@ localURL = require("./url").localURL
 Hub = require "./hub"
 Feed = require("./feed").Feed
 
-CONFIG_FILE = "/etc/ofirehose.json"
+CONFIG_FILES =  [
+  "/etc/ofirehose.json"
+]
 
+config = {}
 defaults =
   key: null
   cert: null
   server: os.hostname()
   driver: "memory"
   params: {}
-  address: null,
-  
-if fs.existsSync(CONFIG_FILE)
+  address: null
+  port: null
+
+if process.env.HOME
+  CONFIG_FILES.push path.join process.env.HOME, ".ofirehose.json"
+
+getConfig = (file) ->
   try
-    config = JSON.parse(fs.readFileSync(CONFIG_FILE))
+    raw = fs.readFileSync(file)
+    config = JSON.parse(raw)
   catch err
-    console.error err
-    process.exit 1
-else
-  config = {}
+    if err.code != "ENOENT"
+      console.error "Error parsing JSON file #{file}: #{err.message}"
+        process.exit 1
+
+getConfig file for file in CONFIG_FILES
 
 config = _.defaults config, defaults
-  
+
 server = config.server
 address = config.address or server
 useHTTPS = (if (config.key) then true else false)
@@ -68,7 +77,7 @@ if useHTTPS
   )
 else
   app = express.createServer()
-  
+
 module.exports = app
 
 # Configuration
