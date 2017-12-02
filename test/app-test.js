@@ -22,6 +22,9 @@ vows.describe("app module").addBatch({
 		topic: function() {
 			return require("../lib/app");
 		},
+		teardown: function() {
+			return require("../lib/url").localURL.server = "localhost";
+		},
 		"it works": function(err) {
 			assert.ifError(err);
 		},
