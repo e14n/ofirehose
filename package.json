@@ -9,7 +9,7 @@
     },
     "scripts": {
         "pretest": "coffee -o lib/ -c src/*.coffee",
-        "test": "nyc -r lcov perjury test/*-test.js",
+        "test": "nyc -r text -r lcov perjury test/*-test.js",
         "posttest": "rm -f lib/*.js",
         "build": "coffee -b -c -o lib/ src/*.coffee",
         "start": "node ./lib/app.js",
