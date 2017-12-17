@@ -1,12 +1,21 @@
 {
     "name": "ofirehose",
     "version": "0.2.0-alpha.1",
+    "homepage": "https://github.com/e14n/ofirehose#readme",
+    "author": "Evan Prodromou <evan@e14n.com>",
+    "description": "Firehose for the federated social web",
+    "preferGlobal": true,
     "dependencies": {
         "express": "2.5.x",
         "underscore": "1.4.x",
         "utml": "0.2.x",
         "databank": "0.18.x"
     },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/e14n/ofirehose.git"
+    },
+    "bugs": "https://github.com/e14n/ofirehose/issues",
     "scripts": {
         "pretest": "coffee -o lib/ -c src/*.coffee",
         "test": "nyc -r text -r lcov perjury test/*-test.js",
@@ -24,5 +33,18 @@
         "nyc": "^11.3.0",
         "perjury": "^1.1.0",
         "watch": "^1.0.2"
-    }
+    },
+    "keywords": [
+        "activitystreams",
+        "socialnetwork",
+        "social",
+        "pump",
+        "pumpio",
+        "firhose",
+        "app",
+        "server",
+        "federation",
+        "decentralization"
+    ],
+    "license": "Apache-2.0"
 }
