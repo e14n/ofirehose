@@ -15,13 +15,13 @@
 # limitations under the License.
 
 fs = require "fs"
-os = require "os"
 path = require "path"
 
 _ = require "underscore"
 express = require "express"
 Databank = require("databank").Databank
 
+defaults = require "./defaults"
 routes = require "./routes"
 localURL = require("./url").localURL
 Hub = require "./hub"
@@ -32,14 +32,6 @@ CONFIG_FILES =  [
 ]
 
 config = {}
-defaults =
-  key: null
-  cert: null
-  server: os.hostname()
-  driver: "memory"
-  params: {}
-  address: null
-  port: null
 
 if process.env.HOME
   CONFIG_FILES.push path.join process.env.HOME, ".ofirehose.json"
