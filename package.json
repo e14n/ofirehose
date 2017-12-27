@@ -6,11 +6,11 @@
     "description": "Firehose for the federated social web",
     "preferGlobal": true,
     "dependencies": {
+        "databank": "0.18.x",
         "express": "2.5.x",
         "step": "^1.0.0",
         "underscore": "1.4.x",
-        "utml": "0.2.x",
-        "databank": "0.18.x"
+        "utml": "0.2.x"
     },
     "repository": {
         "type": "git",
