@@ -15,7 +15,8 @@
 // limitations under the License.
 
 var vows = require("perjury"),
-    assert = vows.assert;
+    assert = vows.assert,
+    defaults = require("../lib/defaults");
 
 vows.describe("app module").addBatch({
 	"When we require the module": {
@@ -28,8 +29,22 @@ vows.describe("app module").addBatch({
 		"it works": function(err) {
 			assert.ifError(err);
 		},
-		"it exports an Express app": function(err, app) {
-			assert.isObject(app);
+		"it exports a makeApp() function": function(err, makeApp) {
+			assert.isFunction(makeApp);
+		},
+		"and we call makeApp()": {
+			topic: function(makeApp) {
+				return makeApp(defaults);
+			},
+			"it works": function(err) {
+				assert.ifError(err);
+			},
+			"we get back an Express app": function(err, app) {
+				assert.isObject(app);
+			},
+			"the Express app has a start() method": function(err, app) {
+				assert.isFunction(app.start);
+			}
 		}
 	}
 }).export(module);
