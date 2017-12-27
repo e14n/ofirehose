@@ -27,92 +27,73 @@ localURL = require("./url").localURL
 Hub = require "./hub"
 Feed = require("./feed").Feed
 
-CONFIG_FILES =  [
-  "/etc/ofirehose.json"
-]
+makeApp = (config) ->
+  server = config.server
+  address = config.address or server
+  useHTTPS = (if (config.key) then true else false)
+  if not config.port
+    port = if useHTTPS then 443 else 80
 
-config = {}
+  localURL.server = server
+  localURL.protocol = (if (useHTTPS) then "https" else "http")
 
-if process.env.HOME
-  CONFIG_FILES.push path.join process.env.HOME, ".ofirehose.json"
-
-getConfig = (file) ->
-  try
-    raw = fs.readFileSync(file)
-    config = JSON.parse(raw)
-  catch err
-    if err.code != "ENOENT"
-      console.error "Error parsing JSON file #{file}: #{err.message}"
-      process.exit 1
-
-getConfig file for file in CONFIG_FILES
-
-config = _.defaults config, defaults
-
-server = config.server
-address = config.address or server
-useHTTPS = (if (config.key) then true else false)
-if not config.port
-  port = if useHTTPS then 443 else 80
-
-localURL.server = server
-localURL.protocol = (if (useHTTPS) then "https" else "http")
-
-if useHTTPS
-  app = express.createServer(
-    key: fs.readFileSync(config.key)
-    cert: fs.readFileSync(config.cert)
-  )
-  bounce = express.createServer((req, res, next) ->
-    host = req.header("Host")
-    res.redirect "https://" + host + req.url, 301
-  )
-else
-  app = express.createServer()
-
-module.exports = app
-
-# Configuration
-app.configure ->
-  app.set "views", path.join __dirname, "..", "views"
-  app.set "view engine", "utml"
-  app.use express.bodyParser()
-  app.use express.methodOverride()
-  app.use express.logger()
-  app.use app.router
-  app.use express.static path.join __dirname, "..", "public"
-
-app.configure "development", ->
-  app.use express.errorHandler(
-    dumpExceptions: true
-    showStack: true
-  )
-
-app.configure "production", ->
-  app.use express.errorHandler()
-
-# Routes
-app.get "/", routes.index
-app.get "/feed.json", routes.feed
-app.get "/doc/publish", routes.publish
-app.get "/doc/subscribe", routes.subscribe
-app.post "/ping", routes.ping
-app.post "/hub", routes.hub
-
-# DB
-driver = config.driver
-params = config.params
-params.schema = Hub.schema
-db = Databank.get driver, params
-
-db.connect {}, (err) ->
-  if err
-    console.error "Couldn't connect to JSON store: " + err.message
+  if useHTTPS
+    app = express.createServer(
+      key: fs.readFileSync(config.key)
+      cert: fs.readFileSync(config.cert)
+    )
+    bounce = express.createServer((req, res, next) ->
+      host = req.header("Host")
+      res.redirect "https://" + host + req.url, 301
+    )
   else
-    app.hub = new Hub(localURL.server, db)
-    app.feed = new Feed()
-    if useHTTPS
-      app.listen config.port, address
-      bounce.listen 80, address
+    app = express.createServer()
+
+  # Configuration
+  app.configure ->
+    app.set "views", path.join __dirname, "..", "views"
+    app.set "view engine", "utml"
+    app.use express.bodyParser()
+    app.use express.methodOverride()
+    app.use express.logger()
+    app.use app.router
+    app.use express.static path.join __dirname, "..", "public"
+
+  app.configure "development", ->
+    app.use express.errorHandler(
+      dumpExceptions: true
+      showStack: true
+    )
+
+  app.configure "production", ->
+    app.use express.errorHandler()
+
+  # Routes
+  app.get "/", routes.index
+  app.get "/feed.json", routes.feed
+  app.get "/doc/publish", routes.publish
+  app.get "/doc/subscribe", routes.subscribe
+  app.post "/ping", routes.ping
+  app.post "/hub", routes.hub
+
+  # DB
+  driver = config.driver
+  params = config.params
+  params.schema = Hub.schema
+  db = Databank.get driver, params
+  db.connect {}, (err) ->
+
+    if err
+      console.error "Couldn't connect to JSON store: " + err.message
     else
-      app.listen config.port, address
+      app.hub = new Hub(localURL.server, db)
+      app.feed = new Feed()
+      if useHTTPS
+        app.listen config.port, address
+        bounce.listen 80, address
+      else
+        app.listen config.port, address
+
+  return app
+
+module.exports = makeApp
