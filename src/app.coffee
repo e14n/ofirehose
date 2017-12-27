@@ -19,6 +19,7 @@ path = require "path"
 
 _ = require "underscore"
 express = require "express"
+Step = require "step"
 Databank = require("databank").Databank
 
 defaults = require "./defaults"
@@ -81,18 +82,26 @@ makeApp = (config) ->
   params = config.params
   params.schema = Hub.schema
   db = Databank.get driver, params
-  db.connect {}, (err) ->
 
-    if err
-      console.error "Couldn't connect to JSON store: " + err.message
-    else
-      app.hub = new Hub(localURL.server, db)
-      app.feed = new Feed()
-      if useHTTPS
-        app.listen config.port, address
-        bounce.listen 80, address
+  app.start = (cb) ->
+    if not cb
+      cb = () ->
+
+    db.connect {}, (err) ->
+      if err
+        console.error "Couldn't connect to JSON store: " + err.message
       else
-        app.listen config.port, address
+        app.hub = new Hub(localURL.server, db)
+        app.feed = new Feed()
+        if useHTTPS
+          Step(
+            () ->
+              app.listen config.port, address, this.parallel()
+              bounce.listen 80, address, this.parallel()
+            cb
+          )
+        else
+          app.listen config.port, address, cb
 
   return app
 

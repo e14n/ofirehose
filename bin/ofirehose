@@ -55,3 +55,5 @@ for (_i = 0, _len = CONFIG_FILES.length; _i < _len; _i++) {
 config = _.defaults(config, defaults);
 
 var app = makeApp(config);
+
+app.start();
