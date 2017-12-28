@@ -6,7 +6,10 @@ node_js:
   - "7"
   - "8"
 dist: trusty
-after_script: ./node_modules/.bin/coveralls < coverage/lcov.info
+script: "npm test && sudo sh -c 'export PATH=\"'\"$(dirname $(which node)):$PATH\"'\" && npm run test:root '"
+after_script:
+  - sudo chown -R $(whoami):$(whoami) coverage*
+  - lcov-result-merger 'coverage*/lcov.info' | ./node_modules/.bin/coveralls
 notifications:
   email: false
   webhooks:
