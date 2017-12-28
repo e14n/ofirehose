@@ -23,9 +23,9 @@ var path = require("path"),
 
 var CONFIG_FILES =  [
   "/etc/ofirehose.json"
-]
+];
 
-var config = {}
+var config = {};
 
 if (process.env.HOME) {
   CONFIG_FILES.push(path.join(process.env.HOME, ".ofirehose.json"));
