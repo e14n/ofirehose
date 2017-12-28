@@ -14,6 +14,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+require("./lib/hostname");
+
 var vows = require("perjury"),
     assert = vows.assert,
     defaults = require("../lib/defaults");
@@ -22,9 +24,6 @@ vows.describe("app module").addBatch({
 	"When we require the module": {
 		topic: function() {
 			return require("../lib/app");
-		},
-		teardown: function() {
-			return require("../lib/url").localURL.server = "localhost";
 		},
 		"it works": function(err) {
 			assert.ifError(err);
