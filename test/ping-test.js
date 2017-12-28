@@ -18,29 +18,8 @@ var vows = require("perjury"),
     assert = vows.assert,
     http = require("http"),
     apputil = require("./lib/app"),
-    withAppSetup = apputil.withAppSetup;
-
-var post = {
-	"to": [{
-		"objectType": "collection",
-		"id": "http://activityschema.org/collection/public"
-	}],
-	"cc": [{
-		"objectType": "collection",
-		"id": "https://pump.strugee.net/api/user/alex/followers"
-	}],
-	"verb": "post",
-	"object": {
-		"objectType": "note",
-		"content": "A submission to the firehose!",
-		"id": "uuid:fec86e5c-27d0-4c93-afb9-932c3c685f5f"
-	},
-	"actor": {
-		"objectType": "person",
-		"id": "acct:alex@pump.strugee.net"
-	},
-	"id": "uuid:dc1d333a-6695-4a30-9621-61db0b5c8991"
-};
+    withAppSetup = apputil.withAppSetup,
+    post = require("./data/post");
 
 vows.describe("firehose submission").addBatch(withAppSetup({
 	"and we POST to /ping": {

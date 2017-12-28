@@ -1,0 +1,18 @@
+{
+    "to": [{
+	"objectType": "collection",
+	"id": "http://activityschema.org/collection/public"
+    }],
+    "cc": [],
+    "verb": "post",
+    "object": {
+	"objectType": "note",
+	"content": "A submission to the firehose!",
+	"id": "uuid:fec86e5c-27d0-4c93-afb9-932c3c685f5f"
+    },
+    "actor": {
+	"objectType": "person",
+	"id": "acct:bilbo@localhost"
+    },
+    "id": "uuid:dc1d333a-6695-4a30-9621-61db0b5c8991"
+}
