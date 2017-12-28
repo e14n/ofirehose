@@ -47,7 +47,7 @@ var getConfig = function(file) {
 
 var file;
 
-for (_i = 0, _len = CONFIG_FILES.length; _i < _len; _i++) {
+for (var _i = 0, _len = CONFIG_FILES.length; _i < _len; _i++) {
   file = CONFIG_FILES[_i];
   getConfig(file);
 }
