@@ -23,12 +23,10 @@
         "pretest": "coffee -o lib/ -c src/*.coffee",
         "test": "nyc -r text -r lcov perjury test/*-test.js",
         "test:root": "nyc -r text -r lcov --report-dir coverage-root perjury test/*-test-as-root.js",
-        "posttest": "rm -f lib/*.js",
         "build": "coffee -b -c -o lib/ src/*.coffee",
         "start": "node ./lib/app.js",
         "watch": "watch 'npm run build' ./src/",
         "prepublish": "mkdir -p lib/ && npm run build",
-        "postpublish": "rm lib/*.js",
         "clean": "rm -f lib/*.js *~ lib/*~ src/*~ test/*~"
     },
     "devDependencies": {
