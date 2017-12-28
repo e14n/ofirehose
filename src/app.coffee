@@ -19,6 +19,7 @@ path = require "path"
 
 _ = require "underscore"
 express = require "express"
+methodOverride = require "method-override"
 Step = require "step"
 Databank = require("databank").Databank
 
@@ -54,7 +55,7 @@ makeApp = (config) ->
   app.set "views", path.join __dirname, "..", "views"
   app.set "view engine", "utml"
   app.use express.bodyParser()
-  app.use express.methodOverride()
+  app.use methodOverride()
   app.use express.logger()
   app.use app.router
   app.use express.static path.join __dirname, "..", "public"

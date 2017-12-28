@@ -8,6 +8,7 @@
     "dependencies": {
         "databank": "0.18.x",
         "express": "^3.21.2",
+        "method-override": "^2.3.10",
         "step": "^1.0.0",
         "underscore": "1.4.x",
         "utml": "0.2.x",
