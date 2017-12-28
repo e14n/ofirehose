@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 // spin up ofirehose.com
 //
 // Copyright 2012-2014 E14N https://e14n.com/
