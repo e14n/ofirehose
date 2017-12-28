@@ -18,6 +18,7 @@ require("./lib/hostname");
 
 var vows = require("perjury"),
     assert = vows.assert,
+    _ = require("underscore"),
     defaults = require("../lib/defaults");
 
 vows.describe("app module").addBatch({
@@ -33,7 +34,7 @@ vows.describe("app module").addBatch({
 		},
 		"and we call makeApp()": {
 			topic: function(makeApp) {
-				return makeApp(defaults);
+				return makeApp(_.defaults({port: 15180}, defaults));
 			},
 			"it works": function(err) {
 				assert.ifError(err);
@@ -43,6 +44,23 @@ vows.describe("app module").addBatch({
 			},
 			"the Express app has a start() method": function(err, app) {
 				assert.isFunction(app.start);
+			},
+			"and we call app.start()": {
+				topic: function(app) {
+					app.start(this.callback);
+				},
+				teardown: function(app) {
+					if (app.server && app.server.close) {
+						app.server.close(this.callback);
+					}
+				},
+				"it works": function(err) {
+					assert.ifError(err);
+				},
+				"we get back an app server object": function(err, appServer) {
+					assert.isObject(appServer);
+					assert.isFunction(appServer.listen);
+				}
 			}
 		}
 	}

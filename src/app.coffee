@@ -83,6 +83,9 @@ makeApp = (config) ->
   params.schema = Hub.schema
   db = Databank.get driver, params
 
+  app.server = appServer
+  app.bounce = bounce
+
   app.start = (cb) ->
     if not cb
       cb = () ->
@@ -97,11 +100,13 @@ makeApp = (config) ->
           Step(
             () ->
               app.listen config.port, address, this.parallel()
-              bounce.listen 80, address, this.parallel()
-            cb
+              bounce.listen 80, address, this.parallel(),
+            (err) ->
+              cb(err, app, bounce)
           )
         else
-          app.listen config.port, address, cb
+          app.listen config.port, address, (err) ->
+            cb(err, app)
 
   return app
 
