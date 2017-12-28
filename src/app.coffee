@@ -16,6 +16,8 @@
 
 fs = require "fs"
 path = require "path"
+http = require "http"
+https = require "https"
 
 _ = require "underscore"
 express = require "express"
@@ -39,17 +41,19 @@ makeApp = (config) ->
   localURL.server = server
   localURL.protocol = (if (useHTTPS) then "https" else "http")
 
+  app = express()
   if useHTTPS
-    app = express.createServer(
+    appServer = https.createServer(
       key: fs.readFileSync(config.key)
-      cert: fs.readFileSync(config.cert)
+      cert: fs.readFileSync(config.cert),
+      app
     )
     bounce = express.createServer((req, res, next) ->
       host = req.header("Host")
       res.redirect "https://" + host + req.url, 301
     )
   else
-    app = express.createServer()
+    appServer = http.createServer(app)
 
   # Configuration
   app.set "views", path.join __dirname, "..", "views"
@@ -99,7 +103,7 @@ makeApp = (config) ->
         if useHTTPS
           Step(
             () ->
-              app.listen config.port, address, this.parallel()
+              appServer.listen config.port, address, this.parallel()
               bounce.listen 80, address, this.parallel(),
             (err) ->
               cb(err, app, bounce)
