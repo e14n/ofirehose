@@ -51,22 +51,21 @@ makeApp = (config) ->
     app = express.createServer()
 
   # Configuration
-  app.configure ->
-    app.set "views", path.join __dirname, "..", "views"
-    app.set "view engine", "utml"
-    app.use express.bodyParser()
-    app.use express.methodOverride()
-    app.use express.logger()
-    app.use app.router
-    app.use express.static path.join __dirname, "..", "public"
+  app.set "views", path.join __dirname, "..", "views"
+  app.set "view engine", "utml"
+  app.use express.bodyParser()
+  app.use express.methodOverride()
+  app.use express.logger()
+  app.use app.router
+  app.use express.static path.join __dirname, "..", "public"
 
-  app.configure "development", ->
+  if app.get "env" is "development"
     app.use express.errorHandler(
       dumpExceptions: true
       showStack: true
     )
 
-  app.configure "production", ->
+  if app.get "env" is "production"
     app.use express.errorHandler()
 
   # Routes
