@@ -10,7 +10,8 @@
         "express": "2.5.x",
         "step": "^1.0.0",
         "underscore": "1.4.x",
-        "utml": "0.2.x"
+        "utml": "0.2.x",
+        "yargs": "^10.0.3"
     },
     "repository": {
         "type": "git",

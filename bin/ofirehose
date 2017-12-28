@@ -18,41 +18,62 @@
 var path = require("path"),
     fs = require("fs"),
     _ = require("underscore"),
+    yargs = require("yargs"),
     defaults = require("../lib/defaults"),
-    makeApp = require("../lib/app");
+    makeApp = require("../lib/app"),
+    config = yargs
+             .usage("Usage: $0 [options]")
+             .alias({c: "config", h: "help", v: "version"})
+             .describe({port: "Port that the HTTP server will bind to",
+                        server: "The address on which publish/subscribe will happen",
+                        address: "Address that the HTTP server will bind to; defaults to `server`'s value",
+                        driver: "Databank driver",
+                        params: "Databank driver parameters",
+                        key: "Path to a private key file, if you're using HTTPS",
+                        cert: "Path to a certificate file, if you're using HTTPS"
+                       })
+             .defaults(defaults)
+             .env("OFIREHOSE")
+             // Hack to make sure that .config()'s callback gets run even if -c isn't specified
+             .default("c", "/dev/null", "/etc/pump.io.json and ~/.pump.io.json")
+             .config("c", "JSON configuration file path", function findConfig(filename) {
+                 var files,
+                     config = {},
+                     i,
+                     raw,
+                     parsed;
 
-var CONFIG_FILES =  [
-  "/etc/ofirehose.json"
-];
+                 if (filename !== "/dev/null") {
+                     files = [filename];
+                 } else {
+                     files = ["/etc/ofirehose.json"];
+                     if (process.env.HOME) {
+                         files.push(path.join(process.env.HOME, ".ofirehose.json"));
+                     }
+                 }
 
-var config = {};
+                 // This is all sync
+                 for (i = 0; i < files.length; i++) {
+                     try {
+                         raw = fs.readFileSync(files[i]);
+                     } catch (err) {
+                         continue;
+                     }
 
-if (process.env.HOME) {
-  CONFIG_FILES.push(path.join(process.env.HOME, ".ofirehose.json"));
-}
+                     try {
+                         parsed = JSON.parse(raw);
+                         _.extend(config, parsed);
+                     } catch (err) {
+                         console.error("Error parsing JSON file " + files[i] + ": " + err.message);
+                         process.exit(1);
+                     }
+                 }
 
-var getConfig = function(file) {
-  var err, raw;
-  try {
-    raw = fs.readFileSync(file);
-    return config = JSON.parse(raw);
-  } catch (_error) {
-    err = _error;
-    if (err.code !== "ENOENT") {
-      console.error("Error parsing JSON file " + file + ": " + err.message);
-      return process.exit(1);
-    }
-  }
-};
-
-var file;
-
-for (var _i = 0, _len = CONFIG_FILES.length; _i < _len; _i++) {
-  file = CONFIG_FILES[_i];
-  getConfig(file);
-}
-
-config = _.defaults(config, defaults);
+                 return config;
+             })
+             .help()
+             .version()
+             .argv;
 
 var app = makeApp(config);
 
