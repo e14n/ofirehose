@@ -48,9 +48,11 @@ makeApp = (config) ->
       cert: fs.readFileSync(config.cert),
       app
     )
-    bounce = express.createServer((req, res, next) ->
-      host = req.header("Host")
-      res.redirect "https://" + host + req.url, 301
+    bounce = http.createServer((req, res) ->
+      host = req.headers.host;
+      res.statusCode = 301;
+      res.setHeader("Location", "https://"+host+req.url);
+      res.end();
     )
   else
     appServer = http.createServer(app)
