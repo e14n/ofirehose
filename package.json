@@ -1,6 +1,6 @@
 {
     "name": "ofirehose",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "homepage": "https://github.com/e14n/ofirehose#readme",
     "author": "Evan Prodromou <evan@e14n.com>",
     "description": "Firehose for the federated social web",
