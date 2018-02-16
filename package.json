@@ -27,7 +27,6 @@
         "build": "mkdir -p lib && coffee -b -c -o lib/ src/*.coffee",
         "start": "node ./lib/app.js",
         "watch": "watch 'npm run build' ./src/",
-        "prepare": "npm run build",
         "clean": "rm -f lib/*.js *~ lib/*~ src/*~ test/*~"
     },
     "devDependencies": {
