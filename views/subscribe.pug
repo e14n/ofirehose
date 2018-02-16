@@ -1,0 +1,18 @@
+extend layout
+
+block content
+  h1 Subscribers
+  p You can use the OFirehose.com firehose to get a window into the open social web.
+  p
+    | The main feed is at
+    a(href='https://ofirehose.com/feed.json') https://ofirehose.com/feed.json
+    | .
+  p
+    | The feed is
+    a(href='http://code.google.com/p/pubsubhubbub/') PubSubHubbub
+    | -enabled. To follow new stuff on the feed, use the
+    a(href='http://specs.mart.me.uk/pubsubhubbub-json') PubSubHubbub for JSON
+    | mechanism.
+  p You can use the REST interface (fetching it over HTTP) to catch up, but please don't bang away on the feed to fetch the data. Figure out how to use the PubSubHubbub thing.
+  h2 Caution!
+  p The feed is not scrubbed or spam-filtered. What comes in one side goes right out the other side, more or less untouched. There may be monsters in there.

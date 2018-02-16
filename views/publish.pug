@@ -1,0 +1,14 @@
+extend layout
+
+block content
+  h1 OFirehose for publishers
+  p
+    | To publish data to the firehose, POST new notices to
+    a(href='https://ofirehose.com/ping') https://ofirehose.com/ping
+    | .
+  p
+    | Contents should have Content-Type: application/json and be formatted according to
+    a(href='http://activitystrea.ms/specs/json/1.0/') JSON Activity Streams 1.0
+    | .
+  p Contents should be public. Don't ping with private stuff because it will go all over the place and get cached and jammed up and you'll be sorry.
+  p Don't send spam or other evil things, or you will have bad luck for 18 years and fall down a well and break your leg.
