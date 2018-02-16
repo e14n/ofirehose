@@ -24,6 +24,7 @@ express = require "express"
 methodOverride = require "method-override"
 Step = require "step"
 Databank = require("databank").Databank
+debug = require("debug")("ofirehose:app")
 
 defaults = require "./defaults"
 routes = require "./routes"
@@ -32,11 +33,25 @@ Hub = require "./hub"
 Feed = require("./feed").Feed
 
 makeApp = (config) ->
+
+  debug("Making app")
+  debug(config)
+
   server = config.server
+  debug("server = #{server}")
   address = config.address or server
+  debug("address = #{address}")
   useHTTPS = (if (config.key) then true else false)
-  if not config.port
+  debug("useHTTPS = #{useHTTPS}")
+
+  if _.isString(config.port)
+    port = parseInt(config.port, 10)
+  else if _.isNumber(config.port)
+    port = config.port
+  else
     port = if useHTTPS then 443 else 80
+
+  debug("port = #{port}")
 
   localURL.server = server
   localURL.protocol = (if (useHTTPS) then "https" else "http")
@@ -49,10 +64,10 @@ makeApp = (config) ->
       app
     )
     bounce = http.createServer((req, res) ->
-      host = req.headers.host;
-      res.statusCode = 301;
-      res.setHeader("Location", "https://"+host+req.url);
-      res.end();
+      host = req.headers.host
+      res.statusCode = 301
+      res.setHeader("Location", "https://"+host+req.url)
+      res.end()
     )
   else
     appServer = http.createServer(app)
@@ -85,7 +100,9 @@ makeApp = (config) ->
 
   # DB
   driver = config.driver
+  debug("driver = #{driver}")
   params = config.params
+  debug("params = #{params}")
   params.schema = Hub.schema
   db = Databank.get driver, params
 
@@ -105,13 +122,13 @@ makeApp = (config) ->
         if useHTTPS
           Step(
             () ->
-              appServer.listen config.port, address, this.parallel()
+              appServer.listen port, address, this.parallel()
               bounce.listen 80, address, this.parallel(),
             (err) ->
               cb(err, app, bounce)
           )
         else
-          app.listen config.port, address, (err) ->
+          app.listen port, address, (err) ->
             cb(err, app)
 
   return app
