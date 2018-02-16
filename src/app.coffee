@@ -101,7 +101,10 @@ makeApp = (config) ->
   # DB
   driver = config.driver
   debug("driver = #{driver}")
-  params = config.params
+  if _.isString(config.params)
+    params = JSON.parse config.params
+  else
+    params = config.params
   debug("params = #{params}")
   params.schema = Hub.schema
   db = Databank.get driver, params
