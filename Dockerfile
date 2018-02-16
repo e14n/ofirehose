@@ -6,6 +6,7 @@ WORKDIR /opt/ofirehose
 COPY . /opt/ofirehose
 
 RUN npm install
+RUN npm install databank-redis
 RUN npm run build
 
 EXPOSE 80
