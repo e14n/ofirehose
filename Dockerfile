@@ -12,4 +12,4 @@ EXPOSE 80
 EXPOSE 443
 
 ENTRYPOINT ["/opt/ofirehose/bin/dumb-init", "--"]
-CMD ["npm", "start"]
+CMD ["node", "/opt/ofirehose/bin/ofirehose"]
